@@ -1,0 +1,7 @@
+How to use
+
+1-npm install
+
+2-npm run devstart
+
+//Clarification: need to setup a mongoDB and populate the data with the "populatedb.js" file.
