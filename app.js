@@ -8,11 +8,14 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
 
+var config = require('dotenv').config();
+var PASS = config.parsed.PASS;
+
 var app = express();
 
 //DB Connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb+srv://pablo:<Password>@cluster0.dfek5.mongodb.net/local_library?retryWrites=true&w=majority';
+var mongoDB = `mongodb+srv://pablo:${PASS}@cluster0.dfek5.mongodb.net/local_library?retryWrites=true&w=majority`;
 mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
