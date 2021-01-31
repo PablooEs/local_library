@@ -92,36 +92,27 @@ exports.bookinstance_create_post = [
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function(req, res, next) {
-    async.parallel({
-        bookinstance: function(callback) {
-            BookInstance.findById(req.params.id).exec(callback)}
-        }, function(err, results) {
-        if (err) {return next(err);}
-        console.log(req.params.id);
-        if (results.bookinstance==null) { // No results.
+
+    BookInstance.findById(req.params.id)
+    .populate('book')
+    .exec(function (err, bookinstance) {
+        if (err) { return next(err); }
+        if (bookinstance==null) { // No results.
             res.redirect('/catalog/bookinstances');
         }
         // Successful, so render.
-        res.render('bookinstance_delete', { title: 'Delete Book Instance', bookinstance: results.bookinstance} );
-    });
+        res.render('bookinstance_delete', { title: 'Delete BookInstance', bookinstance:  bookinstance});
+    })
 
 };
 
 // Handle BookInstance delete on POST.
 exports.bookinstance_delete_post = function(req, res, next) {
-
-    async.parallel({
-        bookinstance: function(callback) {
-          BookInstance.findById(req.body.bookinstanceid).exec(callback)
-        }
-    }, function(err, results) {
-        if (err) { return next(err); }
-          // Success
-          BookInstance.findByIdAndRemove(req.body.bookinstanceid, function deleteBookInstance(err){
-          if (err) { return next(err); }
-            // Success - go to book instances list
-            res.redirect('/catalog/bookinstances')
-          })
+  
+  BookInstance.findByIdAndRemove(req.body.id, function deleteBookInstance(err){
+    if (err) { return next(err); }
+    // Success - go to book instances list
+      res.redirect('/catalog/bookinstances');
     });
 };
 
